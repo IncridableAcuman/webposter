@@ -14,8 +14,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ErrorResponse.from(exception,HttpStatus.UNAUTHORIZED));
     }
-    @ExceptionHandler(CustomNonFoundException.class)
-    public ResponseEntity<ErrorResponse> customNotFoundExceptionHandler(CustomNonFoundException exception){
+    @ExceptionHandler(CustomNotFoundException.class)
+    public ResponseEntity<ErrorResponse> customNotFoundExceptionHandler(CustomNotFoundException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.from(exception,HttpStatus.NOT_FOUND));
     }
@@ -28,5 +28,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> customBadRequestExceptionHandler(CustomBadRequestException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.from(exception,HttpStatus.BAD_REQUEST));
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorResponse.from(exception,HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }
