@@ -1,3 +1,28 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-name: /api/v1
+
 spring:
   application:
     name: server
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.PostgreSQLDialect
+
+
+jwt:
+  secret: ${JWT_SECRET}
+  refresh_time: ${JWT_REFRESH_TIME}
+  access_time: ${JWT_ACCESS_TIME}
