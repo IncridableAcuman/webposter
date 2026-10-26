@@ -201,6 +201,27 @@ npm run dev
 
 ---
 
+### 4. Render orqali Deploy qilish (Render Blueprint)
+
+Loyiha ildizida Render platformasi uchun to'liq `render.yaml` (Infrastructure as Code) tayyorlangan:
+
+1. **GitHub**ga o'zgarishlarni commit va push qiling:
+   ```bash
+   git add .
+   git commit -m "Add Render blueprint and cross-origin cookie support"
+   git push origin main
+   ```
+2. **Render Dashboard**ga kiring: [dashboard.render.com](https://dashboard.render.com/)
+3. **New +** tugmasini bosing va **Blueprint**ni tanlang.
+4. **IncridableAcuman/webposter** omborini (`main` branch) ulang.
+5. Render `render.yaml` faylini avtomatik tahlil qiladi va quyidagi muhit o'zgaruvchilarini so'raydi (`sync: false`):
+   - `DB_URL`: Neon PostgreSQL JDBC URL (masalan: `jdbc:postgresql://ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require`)
+   - `DB_USER`: Neon ma'lumotlar bazasi foydalanuvchi nomi
+   - `DB_PASS`: Neon ma'lumotlar bazasi paroli
+6. **Apply** tugmasini bosing. Backend (Docker) va Frontend (Static Site) avtomatik tarzda build bo'lib, ishga tushadi!
+
+---
+
 ## 🧪 Testlarni Tekshirish
 
 Loyiha sifatini ta'minlash maqsadida backend uchun to'liq Unit va Integration testlar yozilgan:

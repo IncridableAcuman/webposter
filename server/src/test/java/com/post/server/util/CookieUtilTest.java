@@ -38,6 +38,18 @@ class CookieUtilTest {
     }
 
     @Test
+    @DisplayName("addCookie with custom sameSite sets configured SameSite attribute")
+    void testAddCookieCustomSameSite() {
+        ReflectionTestUtils.setField(cookieUtil, "sameSite", "None");
+        String token = "sample-refresh-token";
+        cookieUtil.addCookie(token, response);
+
+        String setCookieHeader = response.getHeader(HttpHeaders.SET_COOKIE);
+        assertNotNull(setCookieHeader);
+        assertTrue(setCookieHeader.contains("SameSite=None"));
+    }
+
+    @Test
     @DisplayName("clearCookie adds Set-Cookie header with empty value and Max-Age=0")
     void testClearCookie() {
         cookieUtil.clearCookie(response);

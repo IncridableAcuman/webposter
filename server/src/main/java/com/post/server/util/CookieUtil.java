@@ -14,6 +14,9 @@ public class CookieUtil {
     @Value("${cookie.secure:false}")
     private boolean secure;
 
+    @Value("${cookie.same-site:Lax}")
+    private String sameSite = "Lax";
+
     private void cookieManagement(String refreshToken, long expiration, HttpServletResponse response){
         ResponseCookie cookie = ResponseCookie
                 .from("refreshToken",refreshToken)
@@ -22,7 +25,7 @@ public class CookieUtil {
                 .secure(secure)
                 .maxAge(expiration)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE,cookie.toString());
