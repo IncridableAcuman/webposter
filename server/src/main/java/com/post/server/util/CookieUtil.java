@@ -25,7 +25,7 @@ public class CookieUtil {
         response.addHeader(HttpHeaders.SET_COOKIE,cookie.toString());
     }
     public void addCookie(String refreshToken,HttpServletResponse response){
-        cookieManagement(refreshToken,refreshTime,response);
+        cookieManagement(refreshToken,refreshTime/1000,response);
     }
     public void clearCookie(HttpServletResponse response){
         cookieManagement("",0,response);

@@ -27,7 +27,7 @@ public class AuthController {
         authService.logout(refreshToken, response);
         return ResponseEntity.ok("Logged out");
     }
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<AuthDto.AuthResponse> refresh(@CookieValue(name = "refreshToken",required = false) String refreshToken,HttpServletResponse response){
         return ResponseEntity.ok(authService.refresh(refreshToken, response));
     }

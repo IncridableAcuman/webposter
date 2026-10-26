@@ -10,6 +10,7 @@ import com.post.server.exception.CustomUnauthorizedException;
 import com.post.server.repository.UserRepository;
 import com.post.server.util.CookieUtil;
 import com.post.server.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,14 +51,12 @@ public class AuthService {
         userRepository.save(user);
         return authResponse(user,response);
     }
-    @Transactional(readOnly = true)
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request,HttpServletResponse response){
         UserEntity user = findUser(request.getEmail());
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new CustomBadRequestException("Password mismatch");}
         return authResponse(user,response);
     }
-    @Transactional(readOnly = true)
     public void logout(String refreshToken,HttpServletResponse response){
         if (refreshToken == null || refreshToken.isEmpty()){
             throw new CustomUnauthorizedException("Token is null or empty");}
@@ -68,17 +67,26 @@ public class AuthService {
         tokenService.deleteToken(user);
         cookieUtil.clearCookie(response);
     }
-    @Transactional(readOnly = true)
     public AuthDto.AuthResponse refresh(String refreshToken,HttpServletResponse response){
-        if (refreshToken == null || refreshToken.isEmpty()){
-            throw new CustomUnauthorizedException("Token is null or empty");}
-        String email = jwtUtil.getSubject(refreshToken);
-        if (email == null || !jwtUtil.validateToken(refreshToken)){
+        if (refreshToken == null || refreshToken.isBlank()){
+            throw new CustomUnauthorizedException("Refresh token is missing");}
+        if (!jwtUtil.validateToken(refreshToken)){
             throw new CustomUnauthorizedException("Token invalid or expired");}
+        Claims claims = jwtUtil.extractClaims(refreshToken);
+        String type = claims.get("type",String.class);
+        if (!JwtUtil.REFRESH.equals(type)){
+            throw new CustomUnauthorizedException("Invalid token type");
+        }
+        String email = jwtUtil.getSubject(refreshToken);
         UserEntity user = findUser(email);
-        TokenEntity token = tokenService.getToken(user);
+        TokenEntity token;
+        try {
+            token = tokenService.getToken(user);
+        } catch (Exception e) {
+            throw new CustomUnauthorizedException("Refresh token does not match");
+        }
         if (!token.getRefreshToken().equals(refreshToken)){
-            throw new CustomUnauthorizedException("Token invalid or expired");
+            throw new CustomUnauthorizedException("Refresh token does not match");
         }
         return authResponse(user,response);
     }

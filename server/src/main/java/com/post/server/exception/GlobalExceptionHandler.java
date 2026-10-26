@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.from(exception,HttpStatus.BAD_REQUEST));
     }
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.from(exception, HttpStatus.NOT_FOUND));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

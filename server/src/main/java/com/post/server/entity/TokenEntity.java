@@ -17,7 +17,7 @@ public class TokenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "refresh_token",nullable = false)
+    @Column(name = "refresh_token",nullable = false,columnDefinition = "TEXT")
     private String refreshToken;
 
     @OneToOne

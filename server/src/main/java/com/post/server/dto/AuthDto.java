@@ -19,6 +19,13 @@ public class AuthDto {
         @NotBlank(message = "Password is required")
         @Size(min = 8,message = "Password must be at least 8 characters long")
         private String password;
+
+        public RegisterRequest(String username, String email, String password) {
+            this.username=username;
+            this.email=email;
+            this.password=password;
+        }
+
     }
     @Data
     public static class LoginRequest{
