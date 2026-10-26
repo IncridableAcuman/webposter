@@ -29,6 +29,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.from(exception,HttpStatus.BAD_REQUEST));
     }
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(org.springframework.web.bind.MethodArgumentNotValidException exception){
+        String message = "Validation error";
+        if (exception.getBindingResult().getFieldError() != null) {
+            message = exception.getBindingResult().getFieldError().getDefaultMessage();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Bad Request", message, java.time.LocalDateTime.now()));
+    }
     @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

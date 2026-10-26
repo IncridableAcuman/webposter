@@ -295,6 +295,6 @@ class AuthIntegrationTest {
         mockMvc.perform(get("/tasks")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Tasks list"));
+                .andExpect(jsonPath("$").isArray());
     }
 }

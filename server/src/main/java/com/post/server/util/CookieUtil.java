@@ -11,12 +11,15 @@ public class CookieUtil {
     @Value("${jwt.refresh_time}")
     private long refreshTime;
 
+    @Value("${cookie.secure:false}")
+    private boolean secure;
+
     private void cookieManagement(String refreshToken, long expiration, HttpServletResponse response){
         ResponseCookie cookie = ResponseCookie
                 .from("refreshToken",refreshToken)
                 .httpOnly(true)
                 .value(refreshToken)
-                .secure(false)
+                .secure(secure)
                 .maxAge(expiration)
                 .path("/")
                 .sameSite("Lax")

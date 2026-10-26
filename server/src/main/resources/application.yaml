@@ -1,5 +1,5 @@
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
   servlet:
     context-path: /api/v1
 
@@ -12,19 +12,29 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:10}
+      minimum-idle: ${DB_POOL_MIN:2}
+      idle-timeout: 300000
+      max-lifetime: 600000
+      keepalive-time: 30000
+      connection-timeout: 30000
+
   jpa:
     hibernate:
-      ddl-auto: update
-      show-sql: true
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${SHOW_SQL:false}
     properties:
       hibernate:
-        format-sql: true
-
+        format_sql: false
 
 jwt:
   secret: ${JWT_SECRET}
-  refresh_time: ${JWT_REFRESH_TIME}
-  access_time: ${JWT_ACCESS_TIME}
+  refresh_time: ${JWT_REFRESH_TIME:604800000}
+  access_time: ${JWT_ACCESS_TIME:900000}
 
 cookie:
   secure: ${COOKIE_SECURE:false}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost}

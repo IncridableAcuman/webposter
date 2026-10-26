@@ -1,2 +1,34 @@
 services:
-  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: webposter-server
+    restart: always
+    environment:
+      PORT: 8080
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_TIME: ${JWT_REFRESH_TIME:-604800000}
+      JWT_ACCESS_TIME: ${JWT_ACCESS_TIME:-900000}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:80,http://localhost:5173}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
+      SHOW_SQL: ${SHOW_SQL:-false}
+    ports:
+      - "8080:8080"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api/v1
+    container_name: webposter-client
+    restart: always
+    depends_on:
+      - server
+    ports:
+      - "80:80"

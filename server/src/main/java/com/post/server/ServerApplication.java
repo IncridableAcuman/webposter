@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ServerApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
+		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 		for (DotenvEntry entry : dotenv.entries()){
 			System.setProperty(entry.getKey(),entry.getValue());
 		}
